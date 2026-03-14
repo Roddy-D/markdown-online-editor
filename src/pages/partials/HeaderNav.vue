@@ -12,44 +12,12 @@
       <nav class="button-group">
         <a
           v-if="!isMobile"
-          href="https://wechat.jeffjade.com/"
+          href="https://github.com/dhd2333"
           class="header-link"
           target="_blank"
           rel="noopener"
         >
-          <span class="hint--bottom" aria-label="公众号 Markdown 排版">
-            <icon class="header-icon" name="wechat" />
-          </span>
-        </a>
-        <a href="https://www.niceshare.site/" class="header-link" target="_blank" rel="noopener">
-          <span class="hint--bottom" aria-label="逍遥自在轩">
-            <icon class="header-icon" name="homepage" />
-          </span>
-        </a>
-        <a href="https://www.lovejade.cn/" class="header-link" target="_blank" rel="noopener">
-          <span class="hint--bottom" aria-label="清风明月轩">
-            <icon class="header-icon" name="home" />
-          </span>
-        </a>
-        <a
-          v-if="!isMobile"
-          href="https://x.com/MarshalXuan"
-          class="header-link"
-          target="_blank"
-          rel="noopener"
-        >
-          <span class="hint--bottom" aria-label="X - 轩帅">
-            <icon class="header-icon" name="x" />
-          </span>
-        </a>
-        <a
-          v-if="!isMobile"
-          href="https://github.com/nicejade"
-          class="header-link"
-          target="_blank"
-          rel="noopener"
-        >
-          <span class="hint--bottom" aria-label="作者 Github">
+          <span class="hint--bottom" aria-label="部署者 Github">
             <icon class="header-icon" name="github" />
           </span>
         </a>
@@ -110,8 +78,6 @@
 <script>
 import 'hint.css'
 import { exportTextMap } from '@config/constant'
-import { createDocument, setActiveDocId, saveDocContent } from '@helper/storage'
-import { trackEvent } from '@helper/analytics'
 
 export default {
   name: 'HeaderNav',
@@ -156,14 +122,11 @@ export default {
         document.msFullscreenElement ||
         document.webkitFullscreenElement
       isFullScreen ? this.cancelFullScreen() : this.launchFullScreen()
-      trackEvent('header_full_screen', 'header', isFullScreen ? 'exit' : 'enter')
     },
     handleCommand(command) {
       this.$router.push(command)
-      trackEvent('header_export', 'header', command)
     },
     onImportClick() {
-      trackEvent('header_import_click', 'header')
       const input = document.createElement('input')
       input.type = 'file'
       input.accept = '.md,.markdown,text/markdown'
@@ -173,12 +136,8 @@ export default {
           const reader = new FileReader()
           reader.onload = (e) => {
             const content = e.target.result
-            const title = (file.name || '').replace(/\.(md|markdown)$/i, '') || '导入的文档'
-            const doc = createDocument(title)
-            saveDocContent(doc.id, content)
-            setActiveDocId(doc.id)
+            localStorage.setItem('vditorvditor', content)
             this.$root.$emit('reload-content')
-            trackEvent('header_import_success', 'header', title)
           }
           reader.readAsText(file)
         }
@@ -237,10 +196,9 @@ export default {
     background 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955);
 
   .header-area {
-    width: 100%;
-    height: 100%;
-    padding: 0 2rem;
+    width: 80%;
     max-width: @max-body-width;
+    height: 100%;
     margin: auto;
     text-align: left;
 
